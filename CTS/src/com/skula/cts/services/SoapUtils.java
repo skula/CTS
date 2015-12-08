@@ -34,7 +34,7 @@ public class SoapUtils {
 		try {
 			ht.call(action, envelope);
 			// testHttpResponse(ht);
-			SoapPrimitive  resultsString = (SoapPrimitive ) envelope.getResponse();
+			SoapObject  resultsString = (SoapObject ) envelope.bodyIn;
 			
 
 			/*
