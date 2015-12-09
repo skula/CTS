@@ -26,7 +26,7 @@ public class CTSService {
 		return h;
 	}
 
-	public static void getBusStopsRequest(String stopName) {
+	public static String getBusStopsRequest(String stopName) {
 		SoapObject request = new SoapObject(NAMESPACE, METHODE_SEARCH_BUSSTOP);
 		request.addProperty("Saisie", stopName);
 		request.addProperty("NoPage", "1");
@@ -36,7 +36,7 @@ public class CTSService {
 		envelope.headerOut[0] = buildHeader();
 
 		String response = SoapUtils.getResponse(SOAP_ACTION_STOPS, MAIN_REQUEST_URL, envelope);
-		response += "";
+		return response += "";
 	}
 
 	public static void getTime(String time, String stopId, String nbTimes) {
@@ -51,6 +51,11 @@ public class CTSService {
 		envelope.headerOut[0] = buildHeader();
 
 		String response = SoapUtils.getResponse(SOAP_ACTION_SCHEDULE, MAIN_REQUEST_URL, envelope);
+		
+		
+		StringBuilder stringBuilder = new StringBuilder();
+
+		
 		response += "";
 	}
 }

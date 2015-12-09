@@ -3,6 +3,7 @@ package com.skula.cts.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.widget.TextView;
 
 import com.skula.cts.R;
 import com.skula.cts.services.CTSService;
@@ -16,6 +17,10 @@ public class MainActivity extends Activity {
 		StrictMode.setThreadPolicy(policy);	
 		setContentView(R.layout.main_layout);
 		
-		CTSService.getBusStopsRequest("Saint");
+
+		TextView btnVerbsEng = (TextView) findViewById(R.id.message);
+		String msg = CTSService.getBusStopsRequest("Saint");
+		btnVerbsEng.setText(msg);
+		
 	}
 }

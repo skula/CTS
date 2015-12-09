@@ -36,7 +36,28 @@ public class SoapUtils {
 			// testHttpResponse(ht);
 			SoapObject  resultsString = (SoapObject ) envelope.bodyIn;
 			
+			 SoapObject root = (SoapObject) resultsString.getProperty(0);
+	         SoapObject s_deals = (SoapObject) root.getProperty("ListeArret");
 
+	           StringBuilder stringBuilder = new StringBuilder();
+				for (int i = 0; i < s_deals.getPropertyCount(); i++) 
+				{
+				    Object property = s_deals.getProperty(i);
+				    if (property instanceof SoapObject)
+				    {
+				        SoapObject category_list = (SoapObject) property;
+				        String label = category_list.getProperty("Libelle").toString();
+				        String id = category_list.getProperty("Code").toString();
+				        stringBuilder.append
+				        (
+				             "Row value of: " +(i+1)+"\n"+
+				             "Libelle: "+label+"\n"+
+				             "Code: "+id+"\n"+
+				             "******************************"
+				        );                   
+				        stringBuilder.append("\n");
+				    }
+				}
 			/*
 			 * List COOKIE_HEADER =
 			 * (List)ht.getServiceConnection().getResponseProperties();
