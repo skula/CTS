@@ -4,11 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal" >
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="18dip" 
+				android:text="Heure: "/>
+			<EditText
+				android:id="@+id/search_time"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="18dip" />
+		</LinearLayout>
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal" >
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="18dip"
+				android:text="Arret: "/>
+			<AutoCompleteTextView 
+				android:id="@+id/search_stop"
+				android:layout_width="300dp"
+				android:layout_height="wrap_content"
+				android:textSize="18dip" />
+		</LinearLayout>
 		
-         <TextView
-            android:id="@+id/message"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textSize="18dip" />
+		 <ListView
+			android:id="@+id/schedule_list"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:cacheColorHint="#ffffff" />
 
 </LinearLayout>
