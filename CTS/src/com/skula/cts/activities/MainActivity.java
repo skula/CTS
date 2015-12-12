@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
 		});
 		
 		this.scheduleList = (ListView) findViewById(R.id.schedule_list);
+		updateListe();
 	}
 
 	private void prout(String search){	
@@ -86,7 +87,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void updateListe(){	
-		List<Schedule> list = CTSService.getSchedules("610", "16:00", "1");
+		List<Schedule> list = CTSService.getSchedules("16:00", "610", "1");
 		Schedule itemArray[] = (Schedule[]) list.toArray(new Schedule[list.size()]);
 		ScheduleAdapter adapter = new ScheduleAdapter(this, R.layout.schedule_item_layout, itemArray);
 		scheduleList.setAdapter(adapter);

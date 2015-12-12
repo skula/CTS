@@ -33,7 +33,9 @@ public class ScheduleAdapter extends ArrayAdapter<Schedule> {
 		View rowView = inflater.inflate(R.layout.schedule_item_layout, parent, false);
 
 		ImageView number = (ImageView) rowView.findViewById(R.id.schedule_pict);
+		int i = shdl.getNumberPict();
 		number.setImageResource(shdl.getNumberPict());
+		//number.setImageResource(R.drawable.plop);
 		TextView destination = (TextView) rowView.findViewById(R.id.schedule_destination);
 		destination.setText(shdl.getDestination());
 		TextView timeLeft = (TextView) rowView.findViewById(R.id.schedule_timeleft);

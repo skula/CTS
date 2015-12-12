@@ -29,7 +29,8 @@ public class Schedule {
 		this.mode = obj.getProperty("Mode").toString();
 
 		String tmp = obj.getProperty("Destination").toString();
-		this.numberPict = Bus.getPict(tmp.substring(0, tmp.indexOf(" ")));
+		String plop = tmp.substring(0, tmp.indexOf(" "));
+		this.numberPict = Bus.getPict(plop);
 		this.destination = tmp.substring(tmp.indexOf(" ") + 1);
 
 		if (obj.getProperty("EstApresMinuit").toString().equals("false")) {
