@@ -31,7 +31,11 @@ public class Schedule {
 		String tmp = obj.getProperty("Destination").toString();
 		String plop = tmp.substring(0, tmp.indexOf(" "));
 		this.numberPict = Bus.getPict(plop);
-		this.destination = tmp.substring(tmp.indexOf(" ") + 1);
+		tmp = tmp.substring(tmp.indexOf(" ") + 1);
+		if(tmp.length()>25){
+			tmp=tmp.substring(0,24)+ ".";
+		}
+		this.destination = tmp;
 
 		if (obj.getProperty("EstApresMinuit").toString().equals("false")) {
 			this.midnight = false;

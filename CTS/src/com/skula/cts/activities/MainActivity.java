@@ -1,6 +1,8 @@
 package com.skula.cts.activities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.style.UpdateLayout;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -36,6 +39,9 @@ public class MainActivity extends Activity {
 
 		this.busStops = new ArrayList<BusStop>();
 		this.searchTime = (EditText) findViewById(R.id.search_time);
+
+		updateDate();
+		
 		this.searchStop = (AutoCompleteTextView ) findViewById(R.id.search_stop);
 		searchStop.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -69,6 +75,11 @@ public class MainActivity extends Activity {
 		this.scheduleList = (ListView) findViewById(R.id.schedule_list);
 		updateListe();
 	}
+	
+	private void updateDate(){
+		Calendar date = Calendar.getInstance();
+		searchTime.setText(new SimpleDateFormat("HH:mm").format(date.getTime()));
+	}
 
 	private void prout(String search){	
 		busStops = CTSService.getBusStops(search);
@@ -87,7 +98,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void updateListe(){	
-		List<Schedule> list = CTSService.getSchedules("16:00", "610", "1");
+		List<Schedule> list = CTSService.getSchedules("18:20", "610", "1");
 		Schedule itemArray[] = (Schedule[]) list.toArray(new Schedule[list.size()]);
 		ScheduleAdapter adapter = new ScheduleAdapter(this, R.layout.schedule_item_layout, itemArray);
 		scheduleList.setAdapter(adapter);
