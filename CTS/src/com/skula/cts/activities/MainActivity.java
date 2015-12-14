@@ -17,6 +17,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.skula.cts.R;
 import com.skula.cts.activities.adapters.ScheduleAdapter;
@@ -59,7 +60,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void afterTextChanged(Editable s) {
 				if (s.length() > 4) {
-					prout(s.toString());
+					getBusStops(s.toString());
 				} else {
 					busStops.clear();
 				}
@@ -73,14 +74,21 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				String t = searchTime.getText().toString();
 				String s = searchStop.getText().toString();
-				if (!t.isEmpty() && !s.isEmpty() && t.matches("[0-2]?[0-9]:[0-5][0-9]")) {
-					String c = getStopCode(s);
-					if (c != null) {
-						updateListe(t, c);
+				if (!t.isEmpty() && !s.isEmpty()){
+					if(t.matches("[0-2]?[0-9]:[0-5][0-9]")) {
+						String c = getStopCode(s);
+						if (c != null) {
+							updateListe(t, c);
+						}else{								
+							Toast.makeText(v.getContext(), "L'arrêt est inconnu", Toast.LENGTH_SHORT).show();
+						}
+					}else{						
+						Toast.makeText(v.getContext(), "L'heure est invalide (HH:mm)", Toast.LENGTH_SHORT).show();
 					}
+				}else{
+					Toast.makeText(v.getContext(), "L'heure ou le nom de l'arrêt est vide", Toast.LENGTH_SHORT).show();
 				}
 				updateDate();
-				// updateListe();
 			}
 		});
 
@@ -93,15 +101,19 @@ public class MainActivity extends Activity {
 	}
 
 	public String getStopCode(String label) {
-		for (BusStop bs : busStops) {
-			if (bs.getLabel().equals(label)) {
-				return bs.getId();
+		try{
+			for (BusStop bs : busStops) {
+				if (bs.getLabel().equals(label)) {
+					return bs.getId();
+				}
 			}
+		}catch(Exception e){
+			Toast.makeText(this, "Aucune connexion réseau établie", Toast.LENGTH_SHORT).show();
 		}
 		return null;
 	}
 
-	private void prout(String search) {
+	private void getBusStops(String search) {
 		busStops = CTSService.getBusStops(search);
 		busStops.size();
 		String s[] = getTab();
