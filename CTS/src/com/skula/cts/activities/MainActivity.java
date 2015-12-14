@@ -6,12 +6,14 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -74,21 +76,23 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				String t = searchTime.getText().toString();
 				String s = searchStop.getText().toString();
-				if (!t.isEmpty() && !s.isEmpty()){
-					if(t.matches("[0-2]?[0-9]:[0-5][0-9]")) {
+				if (!t.isEmpty() && !s.isEmpty()) {
+					if (t.matches("[0-2]?[0-9]:[0-5][0-9]")) {
 						String c = getStopCode(s);
 						if (c != null) {
 							updateListe(t, c);
-						}else{								
+						} else {
 							Toast.makeText(v.getContext(), "L'arrêt est inconnu", Toast.LENGTH_SHORT).show();
 						}
-					}else{						
+					} else {
 						Toast.makeText(v.getContext(), "L'heure est invalide (HH:mm)", Toast.LENGTH_SHORT).show();
 					}
-				}else{
+				} else {
 					Toast.makeText(v.getContext(), "L'heure ou le nom de l'arrêt est vide", Toast.LENGTH_SHORT).show();
 				}
 				updateDate();
+				final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 			}
 		});
 
@@ -101,24 +105,28 @@ public class MainActivity extends Activity {
 	}
 
 	public String getStopCode(String label) {
-		try{
+		try {
 			for (BusStop bs : busStops) {
 				if (bs.getLabel().equals(label)) {
 					return bs.getId();
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			Toast.makeText(this, "Aucune connexion réseau établie", Toast.LENGTH_SHORT).show();
 		}
 		return null;
 	}
 
 	private void getBusStops(String search) {
-		busStops = CTSService.getBusStops(search);
-		busStops.size();
-		String s[] = getTab();
-		ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, getTab());
-		searchStop.setAdapter(adapter);
+		try {
+			busStops = CTSService.getBusStops(search);
+			busStops.size();
+			String s[] = getTab();
+			ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, getTab());
+			searchStop.setAdapter(adapter);
+		} catch (Exception e) {
+			Toast.makeText(this, "Aucune connexion réseau établie", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private String[] getTab() {
@@ -130,9 +138,13 @@ public class MainActivity extends Activity {
 	}
 
 	private void updateListe(String time, String stopCode) {
-		List<Schedule> list = CTSService.getSchedules(time, stopCode, "1");
-		Schedule itemArray[] = (Schedule[]) list.toArray(new Schedule[list.size()]);
-		ScheduleAdapter adapter = new ScheduleAdapter(this, R.layout.schedule_item_layout, itemArray);
-		scheduleList.setAdapter(adapter);
+		try {
+			List<Schedule> list = CTSService.getSchedules(time, stopCode, "1");
+			Schedule itemArray[] = (Schedule[]) list.toArray(new Schedule[list.size()]);
+			ScheduleAdapter adapter = new ScheduleAdapter(this, R.layout.schedule_item_layout, itemArray);
+			scheduleList.setAdapter(adapter);
+		} catch (Exception e) {
+			Toast.makeText(this, "Aucune connexion réseau établie", Toast.LENGTH_SHORT).show();
+		}
 	}
 }

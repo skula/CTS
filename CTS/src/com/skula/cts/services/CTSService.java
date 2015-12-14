@@ -33,7 +33,7 @@ public class CTSService {
 		return h;
 	}
 
-	public static List<BusStop> getBusStops(String stopName) {
+	public static List<BusStop> getBusStops(String stopName)  throws Exception{
 		List<BusStop> res = new ArrayList<BusStop>();
 		
 		SoapObject request = new SoapObject(NAMESPACE, METHODE_SEARCH_BUSSTOP);
@@ -60,7 +60,7 @@ public class CTSService {
 		return res;
 	}
 
-	public static List<Schedule> getSchedules(String time, String stopId, String nbTimes) {
+	public static List<Schedule> getSchedules(String time, String stopId, String nbTimes) throws Exception{
 		List<Schedule> res = new ArrayList<Schedule>();
 		
 		SoapObject request = new SoapObject(NAMESPACE, METHODE_SCHEDULE);
