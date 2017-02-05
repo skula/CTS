@@ -11,8 +11,14 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -23,9 +29,11 @@ import android.widget.Toast;
 
 import com.skula.cts.R;
 import com.skula.cts.activities.adapters.ScheduleAdapter;
+import com.skula.cts.activities.dialogs.FavoriteDialog;
 import com.skula.cts.models.BusStop;
 import com.skula.cts.models.Schedule;
 import com.skula.cts.services.CTSService;
+import com.skula.cts.services.DatabaseService;
 
 public class MainActivity extends Activity {
 	private AutoCompleteTextView searchStop;
@@ -34,6 +42,7 @@ public class MainActivity extends Activity {
 	private ListView scheduleList;
 
 	private List<BusStop> busStops;
+	private DatabaseService dbService;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,10 @@ public class MainActivity extends Activity {
 		this.searchTime = (EditText) findViewById(R.id.search_time);
 
 		updateDate();
+
+		this.dbService = new DatabaseService(this);
+		// bouchon
+		// dbService.bouchon();
 
 		this.searchStop = (AutoCompleteTextView) findViewById(R.id.search_stop);
 		searchStop.addTextChangedListener(new TextWatcher() {
@@ -66,6 +79,21 @@ public class MainActivity extends Activity {
 				} else {
 					busStops.clear();
 				}
+			}
+		});
+
+		final GestureDetector gestureDetector = new GestureDetector(this,
+				new GestureDetector.SimpleOnGestureListener() {
+					public boolean onDoubleTap(MotionEvent e) {
+						FavoriteDialog fd = new FavoriteDialog(getActivity(), dbService, null);
+						fd.show();
+						return true;
+					}
+				});
+
+		searchStop.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				return gestureDetector.onTouchEvent(event);
 			}
 		});
 
@@ -97,6 +125,10 @@ public class MainActivity extends Activity {
 		});
 
 		this.scheduleList = (ListView) findViewById(R.id.schedule_list);
+	}
+
+	private MainActivity getActivity() {
+		return this;
 	}
 
 	private void updateDate() {
@@ -145,6 +177,25 @@ public class MainActivity extends Activity {
 			scheduleList.setAdapter(adapter);
 		} catch (Exception e) {
 			Toast.makeText(this, "Aucune connexion réseau établie", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.favorites:
+			FavoriteDialog fd = new FavoriteDialog(this, dbService, "plop");
+			fd.show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 }
