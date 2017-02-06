@@ -26,6 +26,7 @@ public class FavoriteDialog extends Dialog implements OnClickListener {
 
 	private DatabaseService dbs;
 	private int state;
+	private String labelIn;
 
 	private Button addBtn;
 	private EditText label;
@@ -36,6 +37,7 @@ public class FavoriteDialog extends Dialog implements OnClickListener {
 		super(parentActivity);
 		this.parentActivity = parentActivity;
 		this.dbs = dbs;
+		this.labelIn = label;
 		this.state = label == null ? LIST : MODIFY;
 	}
 
@@ -54,6 +56,9 @@ public class FavoriteDialog extends Dialog implements OnClickListener {
 		addBtn.setOnClickListener(this);
 		
 		label = (EditText) findViewById(R.id.favorite_label);
+		if(labelIn != null){
+			label.setText(labelIn);
+		}
 		
 		favoriteList = (ListView) findViewById(R.id.favorite_list);
 		
@@ -64,10 +69,21 @@ public class FavoriteDialog extends Dialog implements OnClickListener {
 		
 		favoriteList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
-			
+				if(getState() == MODIFY){
+					String tmp = (String)favoriteList.getItemAtPosition(position);
+					dbs.deleteFavorite(tmp);
+				}else{
+					String tmp = (String)favoriteList.getItemAtPosition(position);
+					parentActivity.setLabel(tmp);
+				}
+				dismiss();
 			}
 		});
 
+	}
+	
+	private int getState(){
+		return state;
 	}
 
 	@SuppressLint("NewApi")
@@ -75,6 +91,7 @@ public class FavoriteDialog extends Dialog implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.favorite_add:
+			dbs.insertFavorite(label.getText().toString());
 			dismiss();
 			break;
 		default:

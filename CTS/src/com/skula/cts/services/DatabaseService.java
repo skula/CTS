@@ -35,6 +35,10 @@ public class DatabaseService {
 	/******************* FAVORIE ************************/
 	/*****************************************************/
 	public String insertFavorite(String label) {
+		if(existFavorite(label)){
+			return null;
+		}
+		
 		String sql = "insert into " + TABLE_FAVORITE + "(id, label) values (?,?)";
 		String id = String.valueOf(getNextFavoriteId());
 		statement = database.compileStatement(sql);
@@ -52,10 +56,24 @@ public class DatabaseService {
 		database.update(TABLE_FAVORITE, args, "id=" + id, null);
 	}
 
-	public void deleteFavorite(String id) {
-		database.delete(TABLE_FAVORITE, "id='" + id + "'", null);
+	public void deleteFavorite(String label) {
+		database.delete(TABLE_FAVORITE, "label='" + label + "'", null);
 	}
 
+	public boolean existFavorite(String label) {
+		List<String> res = new ArrayList<String>();
+		Cursor cursor = database.query(TABLE_FAVORITE, new String[] { "label" }, "label='"+label+"'", null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				return true;
+			} while (cursor.moveToNext());
+		}
+		if (cursor != null && !cursor.isClosed()) {
+			cursor.close();
+		}
+		return false;
+	}
+	
 	public List<String> getFavorites() {
 		List<String> res = new ArrayList<String>();
 		Cursor cursor = database.query(TABLE_FAVORITE, new String[] { "label" }, null, null, null, null, null);

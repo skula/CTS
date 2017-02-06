@@ -130,6 +130,14 @@ public class MainActivity extends Activity {
 	private MainActivity getActivity() {
 		return this;
 	}
+	
+	public void setLabel(String label){
+		searchStop.setText(label);
+	}
+	
+	public String getLabel(){
+		return searchStop.getText().toString();
+	}
 
 	private void updateDate() {
 		Calendar date = Calendar.getInstance();
@@ -191,7 +199,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.favorites:
-			FavoriteDialog fd = new FavoriteDialog(this, dbService, "plop");
+			FavoriteDialog fd = new FavoriteDialog(this, dbService, getLabel());
 			fd.show();
 			return true;
 		default:
